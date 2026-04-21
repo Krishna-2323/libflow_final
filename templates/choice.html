@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibFlow | Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* NEW PREMIUM BEIGE PALETTE */
+            --bg-beige: #f5f2ed; 
+            --accent-sage: #5f7a6b;
+            --text-coffee: #3e362e;
+            --text-muted: #8e857d;
+            --card-white: #ffffff;
+            --border-soft: rgba(95, 122, 107, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-beige);
+            /* Subtle geometric texture overlay */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235f7a6b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-coffee);
+        }
+
+        .gateway-container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px;
+            text-align: center;
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-section { margin-bottom: 60px; }
+
+        .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+        }
+
+        .hero-section h1 span {
+            color: var(--accent-sage);
+            font-style: italic;
+        }
+
+        .hero-section p {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .card-grid {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .choice-card {
+            background: var(--card-white);
+            flex: 1;
+            max-width: 400px;
+            padding: 60px 40px;
+            border-radius: 40px;
+            border: 1px solid var(--border-soft);
+            text-decoration: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .choice-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--accent-sage);
+            box-shadow: 0 25px 60px rgba(95, 122, 107, 0.12);
+        }
+
+        .icon-circle {
+            width: 90px;
+            height: 90px;
+            background: var(--bg-beige);
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            transition: 0.4s;
+        }
+
+        .choice-card:hover .icon-circle {
+            background: var(--accent-sage);
+            color: white;
+            border-radius: 50%;
+            transform: rotate(-10deg);
+        }
+
+        .choice-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text-coffee);
+        }
+
+        .choice-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+        }
+
+        .enter-btn {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--accent-sage);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 5px;
+            transition: 0.3s;
+        }
+
+        .choice-card:hover .enter-btn {
+            border-color: var(--accent-sage);
+            letter-spacing: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid { flex-direction: column; align-items: center; }
+            .hero-section h1 { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gateway-container">
+        <div class="hero-section">
+            <p>Welcome to</p>
+            <h1>Lib<span>Flow</span></h1>
+        </div>
+
+        <div class="card-grid">
+            <a href="/set_role/admin" class="choice-card">
+                <div class="icon-circle">🗝️</div>
+                <h2>Administrator</h2>
+                <p>Full control over the BCA resource matrix, inventory logs, and system health monitoring.</p>
+                <div class="enter-btn">Authorized Entry</div>
+            </a>
+
+            <a href="/set_role/student" class="choice-card">
+                <div class="icon-circle">📖</div>
+                <h2>Student</h2>
+                <p>Browse BCA curriculum texts, previous year questions (PYQs), and submit issue requests.</p>
+                <div class="enter-btn">General Access</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

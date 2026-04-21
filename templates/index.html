@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibFlow | Premium Library Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-latte: #eaddca;
+            --card-white: #ffffff;
+            --accent-sage: #5f7a6b;
+            --text-coffee: #3e362e;
+            --text-muted: #7a7169;
+            --border-beige: #d4c5b3;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-latte); color: var(--text-coffee); font-family: 'Inter', sans-serif; line-height: 1.6; }
+
+        nav { background: var(--card-white); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-beige); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--accent-sage); }
+        .counting-number {
+    font-size: 3rem;
+    color: #5f7a6b;
+    font-weight: 800;
+    display: block;
+    opacity: 1 !important;
+}
+        .hero-header { text-align: center; padding: 60px 20px 40px; }
+        .premium-badge {
+            display: inline-flex; align-items: center; padding: 8px 24px; border: 1.5px solid var(--accent-sage);
+            border-radius: 50px; background: #eaddca; font-weight: 800; font-size: 0.75rem; letter-spacing: 2px;
+            position: relative; overflow: hidden; text-transform: uppercase; margin-bottom: 15px;
+        }
+        .premium-badge::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-25deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 150%; } 100% { left: 150%; } }
+        
+        .brand-huge { font-family: 'Playfair Display', serif; font-size: 5.5rem; line-height: 0.9; margin: 0; }
+        .tagline { letter-spacing: 4px; text-transform: uppercase; font-size: 0.9rem; margin-top: 10px; color: var(--text-muted); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto 40px; padding: 0 20px; }
+        .stat-card {
+            background: white; padding: 30px 20px; border-radius: 24px; text-align: center; border: 1px solid #d4c5b3;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .stat-window { width: 100%; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; }
+        .stat-card h3 { font-size: 3rem; color: #5f7a6b; font-weight: 800; margin: 0; line-height: 1; }
+        .stat-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); border-color: #5f7a6b; }
+        .stat-card span { font-size: 0.85rem; font-weight: 600; color: #7a7169; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* THE MAIN WRAPPER FIX (Return to your original style) */
+        .main-container { display: grid; grid-template-columns: 350px 1fr; gap: 30px; max-width: 1300px; margin: 0 auto; padding: 0 20px 50px; }
+        .card { background: var(--card-white); padding: 30px; border-radius: 24px; border: 1px solid var(--border-beige); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); }
+        
+        .sidebar { display: flex; flex-direction: column; gap: 15px; }
+        .btn-primary { width: 100%; background: var(--accent-sage); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .btn-delete { color: #ff4d4d; text-decoration: none; font-weight: 700; font-size: 0.8rem; border: 1px solid #ff4d4d; padding: 5px 12px; border-radius: 50px; transition: 0.3s; }
+        .btn-delete:hover { background: #ff4d4d; color: white; }
+        
+        /* CATEGORY PILL STYLE */
+        .book-category span { display: inline-block; font-size: 0.7rem; font-weight: 800; color: #5f7a6b; background: rgba(95, 122, 107, 0.1); padding: 6px 14px; border-radius: 50px; text-transform: uppercase; border: 1px solid rgba(95, 122, 107, 0.2); min-width: 110px; text-align: center; }
+
+        .filter-chip { padding: 8px 18px; border-radius: 50px; border: 1.5px solid var(--border-beige); background: white; color: var(--text-coffee); font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .filter-chip.active { background: var(--accent-sage); color: white; border-color: var(--accent-sage); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; background: #f8f6f4; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #f1eeeb; font-size: 0.95rem; }
+        /* 1. Make the Filter Chips "Pop" */
+.filter-chip {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Premium Request Button Styling */
+.btn-request {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #3498db; /* Elegant Blue */
+    border: 1.5px solid #3498db;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-request:hover {
+    background-color: #3498db;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-request i {
+    font-size: 0.9rem;
+}
+.filter-chip:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-sage);
+    background: rgba(95, 122, 107, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. Add the Hover Glow to Admin/Student Buttons */
+.btn-primary:hover {
+    background: #4a6154;
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(95, 122, 107, 0.3);
+}
+
+/* 3. Make Archive/Request buttons react */
+.btn-delete:hover {
+    background: #ff4d4d;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+}
+
+/* 4. Fix Pagination Button feel */
+.btn-pagination {
+    transition: all 0.3s ease;
+}
+
+.btn-pagination:hover {
+    border-color: var(--accent-sage);
+    background: rgba(95, 122, 107, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 5. Restore the Stats Card lift */
+.stat-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stat-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-color: var(--accent-sage);
+}
+/* Premium Hover for Restore Link */
+.btn-restore {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--accent-sage);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-restore:hover {
+    background-color: rgba(95, 122, 107, 0.1);
+    color: var(--text-coffee);
+    transform: translateY(-2px);
+}
+
+/* Premium Hover for Delete Button */
+.btn-delete-perm {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ff4d4d;
+    text-decoration: none;
+    border: 1.5px solid #ff4d4d;
+    padding: 6px 16px;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.status-pending { background: #fff4e5; color: #b7791f; border: 1px solid #fbd38d; }
+.status-approved { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
+.status-rejected { background: #fff5f5; color: #9b2c2c; border: 1px solid #feb2b2; }
+.btn-delete-perm:hover {
+    background-color: #ff4d4d;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+}
+th:last-child, td:last-child {
+    min-width: 160px;
+    text-align: right;
+}
+        .btn-pagination { padding: 8px 20px; background: white; border: 1.5px solid var(--border-beige); border-radius: 10px; color: var(--accent-sage); text-decoration: none; font-size: 0.8rem; font-weight: 700; }
+        footer { text-align: center; padding: 50px; color: var(--text-coffee); font-size: 0.85rem; font-weight: 600; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">📚 LIBFLOW</div>
+    <a href="/logout" style="
+        text-decoration: none; 
+        color: var(--accent-sage); 
+        font-weight: 800; 
+        font-size: 0.75rem; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        border: 1.5px solid var(--accent-sage); 
+        padding: 8px 20px; 
+        border-radius: 50px; 
+        transition: all 0.3s ease;
+    " onmouseover="this.style.background='var(--accent-sage)'; this.style.color='white';" 
+       onmouseout="this.style.background='transparent'; this.style.color='var(--accent-sage)';"
+    >
+        Logout ⇥
+    </a>
+</nav>
+
+<div class="hero-header">
+    <div class="premium-badge">✦ Premium Library Suite</div>
+    <h1 class="brand-huge">LibFlow</h1>
+    <p class="tagline">Simple • Elegant • Organized</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><div class="stat-window"><h3 class="counting-number" data-target="{{ total_count }}">0</h3></div><span>Total Books</span></div>
+   <div class="stat-card">
+    <div class="stat-window">
+        <h3 class="counting-number" data-target="{{ pending_count | default(0) }}">0</h3>
+    </div>
+    <span>Pending Requests</span>
+</div>
+   <div class="stat-card">
+    <div class="stat-window">
+        <h3 class="counting-number" data-target="{{ issued_today }}">0</h3>
+    </div>
+    <span>Issued Today</span>
+</div>
+    <div class="stat-card"><div class="stat-window"><h3 class="counting-number" data-target="{{ total_count }}">0</h3></div><span>Total Inventory</span></div>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        {% if role == 'admin' %}
+        <div class="card">
+            <h2 style="font-family: 'Playfair Display'; margin-bottom: 20px;">Quick Actions</h2>
+            <form action="/add" method="POST">
+                <div style="margin-bottom:15px;"><label>Book Title</label><input type="text" name="title" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border-beige);" required></div>
+                <div style="margin-bottom:15px;"><label>Author</label><input type="text" name="author" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border-beige);" required></div>
+                <div style="margin-bottom:20px;"><label>Semester Category</label>
+                    <select name="category" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border-beige);">
+                        <option value="BCA Sem 1-2">BCA Sem 1-2</option>
+                        <option value="BCA Sem 3-4">BCA Sem 3-4</option>
+                        <option value="BCA Sem 5-6">BCA Sem 5-6</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Add to Inventory</button>
+           </form>
+    </div> <div class="card" style="margin-top: 15px; background: #fdfcfb;">
+        <h3 style="font-family: 'Playfair Display'; font-size: 1.1rem; margin-bottom: 15px;">Inbox: Issue Requests</h3>
+        {% if not admin_requests %}
+            <p style="font-size: 0.75rem; color: var(--text-muted);">No new requests.</p>
+        {% else %}
+            {% for req in admin_requests %}
+            <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <p style="font-size: 0.85rem; font-weight: 700; margin: 0;">{{ req[1] }}</p>
+                <p style="font-size: 0.7rem; color: var(--text-muted);">From: {{ req[2] }}</p>
+                <div style="margin-top: 8px; display: flex; gap: 10px;">
+                    <a href="/approve/{{ req[0] }}" style="font-size: 0.65rem; color: #276749; text-decoration: none; font-weight: 800; border: 1px solid #276749; padding: 4px 8px; border-radius: 4px;">APPROVE ✓</a>
+                    <a href="/reject/{{ req[0] }}" style="font-size: 0.65rem; color: #9b2c2c; text-decoration: none; font-weight: 800; border: 1px solid #9b2c2c; padding: 4px 8px; border-radius: 4px;">REJECT ✖</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+        {% else %}
+        <div class="card" style="background: #5f7a6b; color: white; border: none;">
+            <h3 style="font-family: 'Playfair Display';">Student Portal</h3>
+            <p style="font-size: 0.85rem; margin-top: 10px; line-height: 1.5; opacity: 0.9;">
+                Welcome! Browse the BCA collection below. You can request books for issue, but cannot modify the library inventory.
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="card" style="background: var(--accent-sage); color: white; border: none;">
+            <p style="font-size: 0.7rem; text-transform: uppercase;">System Health</p>
+            <p style="font-size: 0.85rem; margin-top: 10px;">Database: <b>Active (MySQL)</b><br>Uptime: 100% Local</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <h2 style="font-family: 'Playfair Display'; font-size: 1.8rem; margin-bottom: 20px;">Recent Inventory</h2>
+            
+            <div class="filter-container" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <span style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted); margin-right: 10px; letter-spacing: 1px;">FILTER BY:</span>
+                <button class="filter-chip active" onclick="filterBooks('all')">All Books</button>
+                <button class="filter-chip" onclick="filterBooks('BCA Sem 1-2')">Sem 1-2</button>
+                <button class="filter-chip" onclick="filterBooks('BCA Sem 3-4')">Sem 3-4</button>
+                <button class="filter-chip" onclick="filterBooks('BCA Sem 5-6')">Sem 5-6</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th> 
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr class="book-row">
+                        <td>#BK-{{ book[0] }}</td>
+                        <td><strong>{{ book[1] }}</strong></td>
+                        <td>{{ book[2] }}</td>
+                        <td class="book-category"><span>{{ book[3] }}</span></td>
+                        <td>
+                            {% if role == 'admin' %}
+                                <a href="/archive/{{ book[0] }}" class="btn-delete">Archive</a>
+                            {% else %}
+                               <a href="/request/{{ book[0] }}" class="btn-request">
+                                 REQUEST ISSUE <span>✚</span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #f1eeeb;">
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Showing page <b>{{ current_page }}</b> of {{ total_pages }}</span>
+                <div style="display: flex; gap: 10px;">
+                    {% if current_page > 1 %}<a href="{{ url_for('dashboard_view', page=current_page-1) }}" class="btn-pagination">Previous</a>{% endif %}
+                    {% if current_page < total_pages %}<a href="{{ url_for('dashboard_view', page=current_page+1) }}" class="btn-pagination">Next Page</a>{% endif %}
+                </div>
+            </div>
+        </div>
+
+       {% if role == 'admin' %}
+    <div class="card" style="margin-top:30px; border: 2px dashed var(--border-beige);">
+        <details>
+            <summary style="cursor:pointer; font-weight:800;">📁 Archive Vault (Admin Only)</summary>
+            <div style="margin-top:20px;">
+                {% for book in archived %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1eeeb;">
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700;">#BK-{{ book[0] }}</span>
+                        <span style="text-decoration: line-through; opacity: 0.5; margin-left: 10px; font-weight: 600;">{{ book[1] }}</span>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <a href="/restore/{{ book[0] }}" class="btn-restore">RESTORE ↺</a>
+                        <a href="/delete_permanent/{{ book[0] }}" class="btn-delete-perm" onclick="return confirm('Delete permanently?')">DELETE ✖</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </details>
+    </div>
+{% else %}
+    <div class="card" style="margin-top:30px; border: 1.5px solid var(--border-beige); background: #fdfcfb;">
+        <h3 style="font-family: 'Playfair Display'; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            ⏳ My Book Requests
+        </h3>
+        
+        {% if not requests %}
+            <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; text-align: center; padding: 20px;">No active requests found. Request a book to see it here!</p>
+        {% else %}
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                {% for req in requests %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 15px; border: 1px solid #f1eeeb; transition: 0.3s hover;">
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem; color: var(--text-coffee);">{{ req[0] }}</strong>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                            Status Tracker
+                        </span>
+                    </div>
+                    
+                    <div style="text-align: right;">
+    <span class="status-badge 
+        {% if req[1] == 'Pending' %}status-pending
+        {% elif req[1] == 'Approved' %}status-approved
+        {% else %}status-rejected{% endif %}">
+        {{ req[1] }}
+    </span>
+</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+            </details>
+        </div>
+    </div>
+</div>
+
+<footer>© 2026 LibFlow LMS | CCSU BCA Final Year Project</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.counting-number');
+    
+    counters.forEach(counter => {
+        // Force conversion to number and handle NaN
+        const targetAttr = counter.getAttribute('data-target');
+        const target = parseInt(targetAttr);
+        
+        if (isNaN(target) || target <= 0) {
+            counter.innerText = "0";
+            return;
+        }
+
+        const duration = 1500;
+        const startTime = performance.now();
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
+            const currentVal = Math.floor(easedProgress * target);
+            
+            counter.innerText = currentVal.toLocaleString();
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+
+        requestAnimationFrame(animate);
+    });
+});
+
+function filterBooks(semester, btn) {
+    // 1. Handle Active Chip Class
+    const chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(chip => chip.classList.remove('active'));
+    
+    // If we passed the button element directly, use it, else try event target
+    if (btn) {
+        btn.classList.add('active');
+    } else if (window.event && window.event.target) {
+        window.event.target.classList.add('active');
+    }
+
+    // 2. Filter Table Rows
+    const rows = document.querySelectorAll('.book-row');
+    rows.forEach(row => {
+        const categoryCell = row.querySelector('.book-category');
+        if (!categoryCell) return;
+        
+        const category = categoryCell.textContent.trim();
+        if (semester === 'all' || category.includes(semester)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+</script>
+</body>
+</html>
